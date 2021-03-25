@@ -1,0 +1,43 @@
+version: "3.7"
+services:
+  frontend:
+    image: docker-ws/frontend
+    build:
+      context: todo-frontend
+      # backend port needs to be passed as build arg because it's used in the build/compile stage, not at runtime
+      args:
+        BACKEND_HOST: localhost
+        BACKEND_PORT: 3333
+    ports:
+      - 8080:80
+    restart: always
+    networks:
+      - react-express
+    depends_on:
+      - backend
+
+  backend:
+    restart: always
+    image: docker-ws/backend
+    build:
+      context: todo-backend
+    environment:
+      PORT: 3333
+    ports:
+      - 3333:3333
+    depends_on:
+      - mongo
+    networks:
+      - express-mongo
+      - react-express
+
+  mongo:
+    restart: always
+    image: mongo:4.2.0
+    volumes:
+      - ./data:/data/db
+    networks:
+      - express-mongo
+networks:
+  react-express:
+  express-mongo:

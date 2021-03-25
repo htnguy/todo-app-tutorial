@@ -1,6 +1,9 @@
 import axios from "axios";
 
-const API_URL="http://localhost:3000/todos/"
+const BACKEND_PORT = process.env.REACT_APP_BACKEND_PORT || 3000;
+const BACKEND_HOST = process.env.REACT_APP_BACKEND_HOST || 'localhost';
+
+const API_URL=`http://${BACKEND_HOST}:${BACKEND_PORT}/todos/`
 async function createTodo(task) {
   const { data: newTodo } = await axios.post(API_URL, {
     task
